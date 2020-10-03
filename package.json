@@ -1,0 +1,17 @@
+{
+  "name": "miniprogram-auto-validator",
+  "version": "1.0.0",
+  "description": "auto validate miniprogram function",
+  "main": "index.js",
+  "scripts": {
+    "automator": "node index.js",
+    "jest": "jest",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LanceZhu",
+  "license": "MIT",
+  "dependencies": {
+    "jest": "^26.4.2",
+    "miniprogram-automator": "^0.10.0"
+  }
+}
