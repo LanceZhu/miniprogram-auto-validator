@@ -1,0 +1,54 @@
+const automator = require('miniprogram-automator')
+
+const projectPath = '<%= projectPath %>'
+const questionPage = '<%= questionPage %>'
+const studentInfo = '<%= studentInfo %>'
+
+let openMp = true
+
+describe(`${studentInfo}-${questionPage}-${projectPath}`, () => {
+	let miniProgram
+
+	beforeAll(async () => {
+		try {
+			miniProgram = await automator.launch({
+				cliPath: 'D:\\Software\\wechat_devtools\\Installation\\微信web开发者工具\\cli.bat',
+				projectPath
+			})
+		} catch (err) {
+			openMp = false
+		}
+	}, 300000)
+
+	afterAll(async () => {
+		await miniProgram.close()
+	})
+
+	it('bupt 前缀', async () => {
+		expect(openMp).toBe(true) // 验证是否能正常导入项目，即是该小程序开发者
+
+		const page = await miniProgram.reLaunch(questionPage)
+		await page.waitFor(500)
+
+		const input1 = await page.$('#input1')
+		await input1.input('bupttest')
+		await page.waitFor(500)
+		const result = await page.$('#result')
+
+		expect(await result.text()).toBe('success')
+	}, 120000)
+
+	it('非 bupt 前缀', async () => {
+		expect(openMp).toBe(true) // 验证是否能正常导入项目，即是该小程序开发者
+
+		const page = await miniProgram.reLaunch(questionPage)
+		await page.waitFor(500)
+
+		const input1 = await page.$('#input1')
+		await input1.input('testbupt')
+		await page.waitFor(500)
+		const result = await page.$('#result')
+
+		expect(await result.text()).toBe('failure')
+	}, 120000)
+})

@@ -1,0 +1,51 @@
+const automator = require('miniprogram-automator')
+
+const projectPath = '<%= projectPath %>'
+const questionPage = '<%= questionPage %>'
+const studentInfo = '<%= studentInfo %>'
+
+let openMp = true
+
+describe(`${studentInfo}-${questionPage}-${projectPath}`, () => {
+	let miniProgram
+
+	beforeAll(async () => {
+		try {
+			miniProgram = await automator.launch({
+				cliPath: 'D:\\Software\\wechat_devtools\\Installation\\微信web开发者工具\\cli.bat',
+				projectPath
+			})
+		} catch (err) {
+			openMp = false
+		}
+	}, 300000)
+
+	afterAll(async () => {
+		await miniProgram.close()
+	})
+
+	it('默认值为3，并可进行加减', async () => {
+		expect(openMp).toBe(true) // 验证是否能正常导入项目，即是该小程序开发者
+
+		const page = await miniProgram.reLaunch(questionPage)
+		await page.waitFor(500)
+
+		const plus = await page.$('#plus')
+		const minus = await page.$('#minus')
+		let list = await page.$$('#result')
+
+		expect(await list.length).toBe(3)
+		
+		await plus.tap()
+		await page.waitFor(500)
+		list = await page.$$('#result')
+
+		expect(await list.length).toBe(4)
+
+		await minus.tap()
+		await page.waitFor(500)
+		list = await page.$$('#result')
+
+		expect(await list.length).toBe(3)
+	}, 120000)
+})
